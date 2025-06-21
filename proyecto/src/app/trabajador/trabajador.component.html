@@ -1,0 +1,96 @@
+<div class="flex flex-col min-h-screen overflow-hidden bg-white">
+<!-- Header -->
+<header class="fixed top-0 left-0 w-full bg-white z-10 h-20">
+    <nav class="flex flex-col sm:flex-row items-center text-green-600 px-4 w-full h-16 border-b ">
+        <button onclick="location.href='http://localhost:80/'" class="rounded-md bg-green-500 text-white py-2 px-4 hover:bg-green-600 transition-colors duration-200 text-sm">
+            Inicio
+        </button>
+    </nav>
+</header>
+    <!-- Cuerpo Enviar Rendición -->
+    <div class="flex flex-grow mt-24 bg-white">
+        <!-- Formulario de Rendición -->
+        <div class="w-7/12 px-16 bg-white">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-xl text-black font-bold">Ingresar Rendición de Gastos</p>
+            </div>
+            <form (ngSubmit)="postRendiciones(form.value, fileInput.files || null)" #form="ngForm">
+                <div class="mb-4">
+                    <div>
+                        <label for="fecha_rendicion" class="block text-sm font-medium text-black ">Fecha en Boleta</label>
+                        <input id="fecha_rendicion" type="date" name="fecha_rendicion" class="bg-white  text-black border-gray-400 border rounded w-full px-2" ngModel required />
+                    </div>
+                    <div class="py-2">
+                        <label for="rut_trabajador" class="block text-sm font-medium text-black">Rut Trabajador/a</label>
+                        <input id="rut_trabajador" type="text" name="rut_trabajador" class="bg-white text-black border border-gray-400 w-full px-2 rounded" ngModel required />
+                    </div>
+                    <div class="py-2">
+                        <label for="nombre_trabajador" class="block text-sm font-medium text-black">Nombre Trabajador/a</label>
+                        <input id="nombre_trabajador" type="text" name="nombre_trabajador" class="bg-white text-black border border-gray-400 w-full px-2 rounded" ngModel required />
+                    </div>
+                    <div class="py-2">
+                        <label for="monto" class="block text-sm font-medium text-black bg-white">Monto</label>
+                        <input id="monto" type="text" name="monto" placeholder="$0" pattern="\d*" class="bg-white text-black border border-gray-400 w-full px-2 rounded" ngModel (input)="formatNumber($event)" required />
+                    </div>
+                    <div class="py-2">
+                        <label for="tipo_gasto" class="block text-sm font-medium text-black">Tipo de Gasto</label>
+                        <select id="tipo_gasto" name="tipo_gasto" class="border border-gray-400 w-full px-2 rounded bg-white text-black" ngModel required>
+                            <option value="" disabled selected>Seleccione un tipo de gasto</option>
+                            <!-- Itera sobre los tiposDeGasto obtenidos del backend -->
+                            <option *ngFor="let tipo of tiposDeGasto" [value]="tipo.nombre">{{ tipo.nombre }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="archivo">Subir documento:</label>
+                        <input type="file" #fileInput multiple />
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <button type="submit" class="rounded-md bg bg-enviar py-1 px-1 text-sm text-white border border-black w-16 h-8">Enviar</button>
+                    <button type="reset" class="rounded-md bg bg-borrar py-1 px-1 text-sm text-white border border-black w-16">Borrar</button>
+                </div>
+            </form>
+        </div>
+
+<!-- Cuerpo Rendiciones -->
+<div class="w-full px-16 bg-white">
+    <div class="flex-grow">
+        <p class="text-xl text-black font-bold">Listado de Rendiciones</p>
+        <p class="text-sm text-gray-500 font-sans font-normal"># ID / Monto / Tipo de Gasto / Nombre Trabajador / Estado</p>
+        <div>
+          <label for="estado" class="block text-sm font-medium text-black">Filtrar por estado:</label>
+          <select id="estado" class="border border-gray-400 w-52 px-2 rounded bg-white text-black" (change)="CambiarEstado($event)">
+              <option value="">Todos</option>
+              <option value="Aceptada">Aceptada</option>
+              <option value="Rechazada">Rechazada</option>
+              <option value="Pendiente">Pendiente</option>
+          </select>
+      </div>
+        <div class="pt-4">
+            <div *ngFor="let rendicion of filtradas" class="rendicion-item border p-4 rounded-lg shadow-md transition-shadow hover:shadow-xl w-full flex items-center justify-between mb-4 h-28 border-gray-400">
+                <p class="pt-1 font-normal text-left w-20">#{{rendicion.id}}</p>
+                <div class="flex mx-16 text-justify w-full">
+                    <div class="flex flex-col text-left">
+                        <p class="fecha_rendicion text-xl font-bold">{{rendicion.fecha_rendicion}}</p>
+                        <p class="monto text-sm font-normal">Monto: ${{rendicion.monto}}.</p>
+                        <p class="tipo_gasto text-sm font-normal">Tipo de Gasto: {{rendicion.tipo_gasto}}.</p>
+                        <p class="nombre_trabajador text-sm font-normal">Trabajador: {{rendicion.nombre_trabajador}}.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end">
+                    <div class="flex justify-center items-center rounded-md w-[119px] h-[30px] text-sm text-white" [ngClass]="{
+                        'bg-boton-home text-slate-50': rendicion.estado === 'Aceptada',
+                        'bg-borrar text-gray-50': rendicion.estado === 'Rechazada',
+                        'bg-pendiente text-white': rendicion.estado === 'Pendiente',
+                    }">
+                    <img *ngIf="rendicion.estado === 'Aceptada'" src="assets/Check circle.png" alt="Aceptada" class="w-auto h-4 mr-1">
+                    <img *ngIf="rendicion.estado === 'Rechazada'" src="assets/X circle.png" alt="Rechazada" class="w-auto h-4 mr-1">
+                    <img *ngIf="rendicion.estado === 'Pendiente'" src="assets/Clock.png" alt="Pendiente" class="w-auto h-4 mr-1">
+                    <div class="status-button inline-block px-2 py-1 rounded-md">
+                        {{ rendicion.estado | titlecase }}
+                    </div>
+            </div>
+
+        </div>
+    </div>
+</div>

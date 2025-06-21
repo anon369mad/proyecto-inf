@@ -1,0 +1,29 @@
+services:
+  angular-app:
+    build:
+      context: ./proyecto  # Indica que el contexto de construcción es la carpeta del frontend
+      dockerfile: Dockerfile  # Dockerfile debe estar en ./proyecto
+    ports:
+      - "80:80"
+
+  web:
+    build:
+      context: ./proyectobase  # Indica que el contexto de construcción es la carpeta del backend
+      dockerfile: Dockerfile  # Dockerfile debe estar en ./proyectobase
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./proyectobase:/API
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: ayds123
+      POSTGRES_PASSWORD: ayds123
+      POSTGRES_DB: proyecto_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./proyectobase/init.sql:/docker-entrypoint-initdb.d/init.sql

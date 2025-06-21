@@ -1,0 +1,93 @@
+<div class="flex flex-col min-h-screen overflow-hidden bg-white">
+  <header class="fixed top-0 left-0 w-full bg-white z-10 h-20">
+    <nav class="flex flex-col sm:flex-row items-center text-green-600 px-4 w-full h-16 border-b">
+      <button onclick="location.href='http://localhost:80/'" class="rounded-md bg-green-500 text-white py-2 px-4 hover:bg-green-600 transition-colors duration-200 text-sm">
+        Inicio
+      </button>
+    </nav>
+  </header>
+
+  <div class="flex flex-grow mt-24 w-full justify-center">
+    <div class="w-10/12">
+      <div class="mb-8">
+        <p class="text-xl text-black font-bold mb-4">Estadística de rendiciones</p> 
+        <div class="flex flex-row items-end gap-4 flex-wrap"> 
+          <div class="flex flex-col"> 
+            <label for="anio" class="mb-1 text-sm text-gray-700">Seleccione un año:</label>
+            <select name="anio" id="anio" class="border rounded px-3 py-2 w-48"
+                    [(ngModel)]="anioSeleccionado"
+                    (change)="onFiltroCambio()">
+              <option [ngValue]="null">-- Elegir Año --</option>
+              <option *ngFor="let anio of anosDisponibles" [value]="anio">{{anio}}</option>
+            </select>
+          </div>
+
+          <div class="flex flex-col"> 
+            <label for="periodo" class="mb-1 text-sm text-gray-700">Seleccione un periodo:</label>
+            <select name="periodo" id="periodo" class="border rounded px-3 py-2 w-48"
+                    [(ngModel)]="periodoSeleccionado"
+                    (change)="onPeriodoTipoCambio()">
+              <option value="">-- Elegir Tipo de Periodo --</option>
+              <option value="anual">Anual</option>
+              <option value="mensual">Mensual</option>
+            </select>
+          </div>
+
+          <div *ngIf="periodoSeleccionado === 'mensual'" class="flex flex-col"> 
+            <label for="mes" class="mb-1 text-sm text-gray-700">Seleccione un mes:</label>
+            <select name="mes" id="mes" class="border rounded px-3 py-2 w-48"
+                    [(ngModel)]="mesSeleccionado"
+                    (change)="onFiltroCambio()">
+              <option [ngValue]="null">-- Elegir Mes --</option>
+              <option *ngFor="let mes of meses" [value]="mes.value">{{mes.name}}</option>
+            </select>
+          </div>
+
+          <div *ngIf="anioSeleccionado !== null" class="flex flex-col"> 
+            <label for="tipoGasto" class="mb-1 text-sm text-gray-700">Seleccione un tipo de gasto:</label>
+            <select name="tipoGasto" id="tipoGasto" class="border rounded px-3 py-2 w-48"
+                    [(ngModel)]="tipoGastoSeleccionado"
+                    (change)="onTipoGastoCambio()">
+              <option [ngValue]="null">-- Elegir tipo de gasto --</option>
+              <option value="todos">Todos los tipos</option>
+              <option *ngFor="let tipo of tiposDeGasto" [value]="tipo.nombre">{{tipo.nombre}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6">
+        <div class="col-span-full bg-white rounded-lg shadow p-4 flex flex-col h-auto w-full">
+          <p class="text-center text-gray-700 font-semibold">Cantidad de rendiciones</p>
+          <p class="text-3xl py-4 text-center">{{totalRendiciones}}</p>
+          <div class="flex flex-row justify-around gap-2">
+            <div class="bg-green-400 rounded-lg shadow p-4 flex-1 text-center">
+              <p class="text-sm font-semibold text-white">Aceptadas</p>
+              <p class="text-2xl text-white">{{aceptadas}}</p>
+            </div>
+            <div class="bg-red-400 rounded-lg shadow p-4 flex-1 text-center">
+              <p class="text-sm font-semibold text-white">Rechazadas</p>
+              <p class="text-2xl text-white">{{rechazadas}}</p>
+            </div>
+            <div class="bg-yellow-400 rounded-lg shadow p-4 flex-1 text-center">
+              <p class="text-sm font-semibold text-white">Pendientes</p>
+              <p class="text-2xl text-white">{{pendientes}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+          <div class="bg-white rounded-lg shadow p-4 flex flex-col justify-center items-center w-full">
+            <p class="text-center text-gray-700 font-semibold mb-2">Monto total de rendiciones</p>
+            <p class="text-3xl text-green-600 font-bold">{{ montoTotal | currency:'CLP':'symbol':'1.0-0' }}</p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-4 flex flex-col justify-center items-center w-full">
+            <p class="text-center text-gray-700 font-semibold mb-2">Monto promedio por rendición</p>
+            <p class="text-3xl text-green-600 font-bold">{{ montoPromedio | currency:'CLP':'symbol':'1.0-0' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

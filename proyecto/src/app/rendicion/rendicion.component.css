@@ -1,0 +1,10 @@
+.document-link {
+    color: #007bff; /* Azul estilo bootstrap */
+    text-decoration: none; /* Quitar subrayado */
+    font-weight: bold; /* Texto en negrita */
+  }
+  
+  .document-link:hover {
+    color: #0056b3; /* Azul más oscuro al pasar el mouse */
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+  }

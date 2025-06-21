@@ -1,0 +1,43 @@
+
+<button (click)="abrirModal()" class="bg-blue-600 text-white px-4 py-2 rounded">
+  Iniciar Sesión
+</button>
+
+<div *ngIf="mostrarModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl shadow-lg p-6 max-w-fit relative w-96">
+    <button (click)="cerrarModal()" class="absolute top-2 right-2 text-gray-500 hover:text-black">
+      x
+    </button>
+
+    <h2 class="text-xl font-bold mb-4">Iniciar Sesión</h2>
+    <form (ngSubmit)="iniciarSesion()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Nombre de usuario</label>
+        <input
+          type="text"
+          [(ngModel)]="usuario"
+          name="usuario"
+          class="w-full border border-gray-300 p-4 rounded"
+          placeholder="Jdoe"
+          required
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Contraseña</label>
+        <input
+          type="password"
+          [(ngModel)]="contrasenia"
+          name="contrasenia"
+          class="w-full border border-gray-300 p-4 rounded"
+          placeholder="********"
+          required
+        />
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        Entrar
+      </button>
+    </form>
+  </div>
+</div>

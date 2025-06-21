@@ -1,0 +1,44 @@
+<div #rendicionModal class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center">
+  <div class="overlay-content p-6 bg-white shadow-md rounded-lg">
+    <h2 class="text-lg font-bold mb-4">Detalles de la Rendición</h2>
+    
+    <div *ngIf="rendicion">
+      <p><strong>ID:</strong> {{ rendicion.id }}</p>
+      <p><strong>Fecha:</strong> {{ rendicion.fecha_rendicion | date }}</p>
+      <p><strong>Nombre Trabajador/a:</strong> {{ rendicion.nombre_trabajador }}</p>
+      <p><strong>Rut Trabajador/a:</strong> {{ rendicion.rut_trabajador }}</p>
+      <p><strong>Monto:</strong> ${{ rendicion.monto }}</p>
+      <p><strong>Tipo de Gasto:</strong> {{ rendicion.tipo_gasto }}</p>
+      <p><strong>Estado:</strong> {{ rendicion.estado }}</p>
+    </div>
+
+    <div *ngIf="documentos.length > 0">
+      <p><strong>Archivos:</strong>
+      <ul>
+        <li *ngFor="let documento of documentos">
+          <a [href]="documento.url" target="_blank" class="document-link">Archivo {{ documento.id }}</a>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="documentos.length === 0">
+      <p>No hay archivos asociados a esta rendición.</p>
+    </div>    
+  
+    <!-- Botones-->
+    <div class="actions mt-4 flex justify-end space-x-2">
+      <div *ngIf="rendicion">
+        <button (click)="aceptarRendicion(rendicion.id); cerrarOverlay()" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+          Aceptar
+        </button>
+      </div>
+      <div *ngIf="rendicion">
+        <button (click)="rechazarRendicion(rendicion.id); cerrarOverlay()" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
+          Rechazar
+        </button>
+      </div>
+      <button (click)="cerrarOverlay()" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
