@@ -2,7 +2,6 @@ import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@
 import { Rendicion } from '../rendicion.model';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-//import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 @Component({
   selector: 'app-rendicion',
