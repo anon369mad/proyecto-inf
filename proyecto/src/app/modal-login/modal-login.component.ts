@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-login',
@@ -11,25 +11,25 @@ import { Router, RouterOutlet } from '@angular/router';
   templateUrl: './modal-login.component.html',
   styleUrl: './modal-login.component.css'
 })
-
 export class ModalLoginComponent {
   usuario = ''
   contrasenia = ''
   mostrarModal = false;
 
-  constructor(private router : Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
-  abrirModal(){
+  abrirModal() {
     this.mostrarModal = true;
     console.log("Modal abierto");
   }
-  cerrarModal(){
+
+  cerrarModal() {
     this.mostrarModal = false;
     this.usuario = '';
     this.contrasenia = '';
   }
 
-  iniciarSesion(){
+  iniciarSesion() {
     const credenciales = {
       usuario: this.usuario,
       contrasenia: this.contrasenia
@@ -42,32 +42,33 @@ export class ModalLoginComponent {
       next: (respuesta) => {
         console.log('Respuesta de login:', respuesta);
 
-        if (respuesta && respuesta.id && respuesta.rol && respuesta.rut) { 
+        if (respuesta?.id && respuesta?.rol && respuesta?.rut) {
           localStorage.setItem('id_usuario', respuesta.id.toString());
           localStorage.setItem('usuario_rol', respuesta.rol);
-          localStorage.setItem('userRut', respuesta.rut); // 
+          localStorage.setItem('userRut', respuesta.rut);
           console.log('ID de usuario guardado en localStorage:', respuesta.id);
           console.log('Rol de usuario guardado en localStorage:', respuesta.rol);
-          console.log('RUT de usuario guardado en localStorage:', respuesta.rut); 
+          console.log('RUT de usuario guardado en localStorage:', respuesta.rut);
         } else {
           console.warn('La respuesta del login no contiene un ID de usuario, rol o RUT válido.');
           this.showMessage('Inicio de sesión exitoso, pero no se pudo obtener el ID de usuario, rol o RUT.', 'warning');
         }
 
-        const rol = respuesta.rol;
+        const rol = respuesta?.rol;
         if (rol === 'revisor') {
           this.router.navigate(['/jefe-area']);
         } else if (rol === 'ingresador') {
           this.router.navigate(['/trabajador']);
         } else if (rol === 'visualizador') {
           this.router.navigate(['/visualizador']);
-        } else if (rol === 'validador'){
+        } else if (rol === 'validador') {
           this.router.navigate(['/contador']);
         } else {
           console.warn('Rol de usuario desconocido:', rol);
           this.showMessage('Rol de usuario desconocido, redirigiendo a la página principal.', 'warning');
           this.router.navigate(['/']);
         }
+
         this.cerrarModal();
       },
       error: (err) => {
