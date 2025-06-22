@@ -4,3 +4,7 @@ import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));
+interface User { name: string }
+function greet(user?: User) {
+  console.log(user.name);  // Possible null dereference
+}
