@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout completo (necesario para el historial de Git)
+      # 1. Checkout completo
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: '18'
 
-      # 4. Instalar dependencias
+      # 4. Instalar dependencias de tu app
       - name: Install npm dependencies
         working-directory: ./proyecto
         run: npm ci
@@ -42,12 +42,12 @@ jobs:
         working-directory: ./proyecto
         run: npm run build --if-present
 
-      # 6. SonarCloud Scan
+      # 6. Ejecutar SonarCloud
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
-          organization: anon369mad                   # tu organización en SonarCloud
-          projectKey: anon369mad_proyecto-inf        # tu projectKey
-          projectBaseDir: proyecto                   # donde está sonar-project.properties
+          organization: anon369mad                   # tu org en SonarCloud
+          projectKey: anon369mad_proyecto-inf       # tu projectKey
+          projectBaseDir: proyecto                  # donde está sonar-project.properties
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
