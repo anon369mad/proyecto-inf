@@ -44,10 +44,10 @@ jobs:
 
       # 6. Ejecutar SonarCloud
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v5.2.0 
         with:
-          organization: anon369mad                   # tu org en SonarCloud
-          projectKey: anon369mad_proyecto-inf       # tu projectKey
           projectBaseDir: proyecto                  # donde está sonar-project.properties
+          args: >                                       # aquí pasas cualquier parámetro extra
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}  # token de autenticación
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
