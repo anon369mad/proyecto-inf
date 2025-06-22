@@ -1,19 +1,53 @@
-name: Build
+name: CI – Build & SonarCloud
+
 on:
   push:
     branches:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
-  sonarqube:
-    name: SonarQube
-    runs-on: windows-latest
+  sonarcloud:
+    name: Build + SonarCloud
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      # 1. Checkout completo (necesario para el historial de Git)
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarQube Scan
+          fetch-depth: 0
+
+      # 2. Java 11 (requisito del SonarScanner)
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      # 3. Node.js (Angular)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 4. Instalar dependencias
+      - name: Install npm dependencies
+        working-directory: ./proyecto
+        run: npm ci
+
+      # 5. (Opcional) Compilar tu proyecto Angular
+      - name: Build Angular app
+        working-directory: ./proyecto
+        run: npm run build --if-present
+
+      # 6. SonarCloud Scan
+      - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
+        with:
+          organization: anon369mad                   # tu organización en SonarCloud
+          projectKey: anon369mad_proyecto-inf        # tu projectKey
+          projectBaseDir: proyecto                   # donde está sonar-project.properties
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
